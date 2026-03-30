@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GoalScope</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f172a; --card:#1e293b; --border:#334155;
+  --text:#f1f5f9; --muted:#94a3b8; --accent:#38bdf8;
+  --green:#22c55e; --green-bg:#052e16;
+  --red:#ef4444; --red-bg:#450a0a;
+  --amber:#f59e0b; --amber-bg:#451a03;
+  --over:#f97316; --under:#38bdf8;
+  --purple:#a855f7;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;}
+
+/* HEADER */
+.hdr{background:#080f1e;padding:.75rem 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--border);position:sticky;top:0;z-index:100;}
+.hdr-title{font-family:'Archivo Black',sans-serif;font-size:1.1rem;color:var(--accent);}
+.hdr-sub{font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;}
+.live-tag{background:#052e16;color:var(--green);font-size:.6rem;font-weight:700;padding:.2rem .55rem;border-radius:999px;border:1px solid var(--green);}
+
+/* MARKET TABS */
+.mtabs{display:flex;background:#080f1e;border-bottom:2px solid var(--border);position:sticky;top:52px;z-index:99;}
+.mtab{flex:1;padding:.7rem .2rem;text-align:center;font-family:'Archivo Black',sans-serif;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.mtab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+/* PAGES */
+.pg{display:none;padding:.9rem;}
+.pg.active{display:block;}
+
+/* STEP CARDS */
+.step{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1rem;margin-bottom:.8rem;}
+.step-hd{display:flex;align-items:center;gap:.6rem;margin-bottom:.75rem;}
+.step-num{background:var(--accent);color:#0f172a;font-family:'Archivo Black',sans-serif;font-size:.75rem;width:1.6rem;height:1.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-title{font-family:'Archivo Black',sans-serif;font-size:.82rem;color:var(--text);}
+.step-sub{font-size:.65rem;color:var(--muted);margin-top:.1rem;}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:.5rem;}
+.search-input{width:100%;background:#0f172a;border:1.5px solid var(--border);border-radius:9px;padding:.6rem .6rem .6rem 2.2rem;color:var(--text);font-size:.9rem;font-weight:600;outline:none;font-family:'Archivo',sans-serif;}
+.search-input:focus{border-color:var(--accent);}
+.search-input::placeholder{color:var(--muted);font-weight:400;}
+.search-icon{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);font-size:.95rem;pointer-events:none;}
+.search-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:var(--accent);color:#0f172a;border:none;border-radius:6px;padding:.25rem .5rem;font-family:'Archivo Black',sans-serif;font-size:.65rem;cursor:pointer;}
+.drop{background:var(--card);border:1px solid var(--border);border-radius:9px;margin-top:.3rem;overflow:hidden;display:none;max-height:170px;overflow-y:auto;}
+.drop-item{padding:.55rem .75rem;font-size:.8rem;cursor:pointer;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.45rem;}
+.drop-item:last-child{border-bottom:none;}
+.drop-item:active{background:#0f172a;}
+.tlogo{width:1.1rem;height:1.1rem;object-fit:contain;}
+.loading{text-align:center;padding:.6rem;color:var(--muted);font-size:.72rem;}
+.spinner{display:inline-block;width:.85rem;height:.85rem;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin-right:.3rem;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.auto-tag{display:inline-flex;align-items:center;gap:.3rem;background:var(--green-bg);color:var(--green);font-size:.6rem;font-weight:700;padding:.15rem .45rem;border-radius:999px;border:1px solid var(--green);margin-bottom:.4rem;}
+.err-msg{background:var(--red-bg);color:#fca5a5;font-size:.7rem;padding:.4rem .65rem;border-radius:7px;margin-bottom:.4rem;display:none;}
+
+/* QUICK STATS — simple number inputs */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.1rem;}
+.input-group{display:flex;flex-direction:column;gap:.25rem;}
+.input-lbl{font-size:.62rem;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+.num-input{background:#0f172a;border:1.5px solid var(--border);border-radius:8px;padding:.5rem .6rem;color:var(--text);font-size:1rem;font-weight:700;outline:none;text-align:center;width:100%;font-family:'Archivo',sans-serif;}
+.num-input:focus{border-color:var(--accent);}
+.num-input::placeholder{color:var(--muted);}
+
+/* FORM BUTTONS last 5 */
+.form-row{display:flex;gap:.4rem;margin-bottom:.1rem;}
+.fb{width:2rem;height:2rem;border-radius:6px;border:1.5px solid var(--border);background:#0f172a;color:var(--muted);font-family:'Archivo Black',sans-serif;font-size:.78rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0;}
+.fb.W{background:#052e16;color:var(--green);border-color:var(--green);}
+.fb.D{background:var(--amber-bg);color:var(--amber);border-color:var(--amber);}
+.fb.L{background:var(--red-bg);color:var(--red);border-color:var(--red);}
+
+/* DIVIDER */
+.dvd{text-align:center;font-size:.6rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;padding:.4rem 0;position:relative;}
+.dvd::before,.dvd::after{content:'';position:absolute;top:50%;width:35%;height:1px;background:var(--border);}
+.dvd::before{left:0;}.dvd::after{right:0;}
+
+/* BIG ANALYSE BUTTON */
+.analyse-btn{width:100%;padding:.9rem;background:var(--accent);color:#0f172a;font-family:'Archivo Black',sans-serif;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;border:none;border-radius:11px;cursor:pointer;margin-top:.5rem;}
+.analyse-btn:active{opacity:.8;}
+
+/* ═══ RESULT CARDS ═══ */
+.result-wrap{margin-top:.9rem;display:none;}
+
+/* BIG VERDICT */
+.verdict{border-radius:14px;padding:1.1rem;text-align:center;margin-bottom:.8rem;}
+.verdict.over  {background:linear-gradient(135deg,#1a0800,#2d1500);border:2px solid var(--over);}
+.verdict.under {background:linear-gradient(135deg,#001118,#002233);border:2px solid var(--under);}
+.verdict.gg    {background:linear-gradient(135deg,#1a0030,#220050);border:2px solid var(--purple);}
+.verdict.ng    {background:linear-gradient(135deg,#111,#1a1a1a);border:2px solid #4b5563;}
+.verdict.neutral{background:linear-gradient(135deg,#1e293b,#0f172a);border:2px solid var(--border);}
+.v-lbl{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;opacity:.7;margin-bottom:.25rem;}
+.v-title{font-family:'Archivo Black',sans-serif;font-size:1.3rem;margin-bottom:.2rem;}
+.v-sub{font-size:.72rem;opacity:.8;}
+
+/* PROB PILLS ROW */
+.prob-row{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.8rem;}
+.prob-pill{flex:1;min-width:70px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.6rem .3rem;text-align:center;}
+.prob-pill.highlight{border-color:var(--accent);background:#0c2233;}
+.pp-lbl{font-size:.58rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem;font-weight:600;}
+.pp-val{font-family:'Archivo Black',sans-serif;font-size:1.1rem;color:var(--accent);}
+.pp-val.over-c{color:var(--over);}
+.pp-val.under-c{color:var(--under);}
+.pp-val.gg-c{color:var(--purple);}
+.pp-val.ng-c{color:#9ca3af;}
+
+/* CONFIDENCE BAR */
+.conf-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.75rem;margin-bottom:.8rem;}
+.conf-top{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-bottom:.4rem;font-weight:600;}
+.conf-track{background:#0f172a;border-radius:999px;height:10px;overflow:hidden;}
+.conf-bar{height:100%;border-radius:999px;transition:width .8s ease;}
+
+/* TIPS */
+.tips-card{background:#060f25;border:1px solid #1d3a8a;border-radius:10px;padding:.8rem;margin-bottom:.8rem;}
+.tips-card h3{font-family:'Archivo Black',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:#60a5fa;margin-bottom:.45rem;}
+.tip{font-size:.73rem;color:#93c5fd;padding:.18rem 0;}
+.tip::before{content:"→ ";font-weight:700;}
+
+/* ODDS CHECK */
+.odds-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.8rem;margin-bottom:.8rem;}
+.odds-card h3{font-family:'Archivo Black',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;}
+.odds-row{display:flex;gap:.5rem;align-items:flex-end;}
+.odds-input-wrap{flex:1;display:flex;flex-direction:column;gap:.25rem;}
+.odds-lbl{font-size:.62rem;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;}
+.odds-input{background:#0f172a;border:1.5px solid var(--border);border-radius:8px;padding:.5rem .6rem;color:var(--text);font-size:1rem;font-weight:700;outline:none;text-align:center;width:100%;font-family:'Archivo',sans-serif;}
+.odds-input:focus{border-color:var(--accent);}
+.check-btn{padding:.52rem .9rem;background:var(--accent);color:#0f172a;font-family:'Archivo Black',sans-serif;font-size:.75rem;border:none;border-radius:8px;cursor:pointer;white-space:nowrap;}
+.odds-result{border-radius:8px;padding:.5rem .7rem;font-size:.73rem;font-weight:600;display:none;margin-top:.5rem;}
+.odds-result.good{background:var(--green-bg);color:var(--green);border:1px solid var(--green);}
+.odds-result.bad{background:var(--red-bg);color:var(--red);border:1px solid var(--red);}
+.odds-result.fair{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber);}
+
+/* LINKS */
+.links-title{font-family:'Archivo Black',sans-serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.links-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-bottom:.8rem;}
+.link-btn{display:flex;align-items:center;justify-content:center;gap:.35rem;padding:.55rem;border-radius:8px;font-size:.7rem;font-weight:700;text-decoration:none;border:1.5px solid;transition:opacity .15s;}
+.link-btn:active{opacity:.7;}
+.lb-flash{background:#150010;color:#e94560;border-color:#e94560;}
+.lb-sofa {background:#001020;color:#3d9df8;border-color:#3d9df8;}
+.lb-odds {background:#001500;color:#4caf50;border-color:#4caf50;}
+.lb-port {background:#151000;color:var(--amber);border-color:var(--amber);}
+
+/* SAVE + RESET */
+.save-btn{width:100%;padding:.75rem;background:#1e293b;color:var(--accent);font-family:'Archivo Black',sans-serif;font-size:.85rem;border:1.5px solid var(--accent);border-radius:10px;cursor:pointer;margin-bottom:.5rem;}
+.reset-btn{width:100%;padding:.65rem;background:transparent;color:var(--muted);font-family:'Archivo',sans-serif;font-size:.8rem;font-weight:600;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:1rem;}
+
+/* TRACKER PAGE */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.8rem;}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.6rem .3rem;text-align:center;}
+.stat-n{font-family:'Archivo Black',sans-serif;font-size:1.3rem;}
+.stat-l{font-size:.55rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.stat-n.g{color:var(--green);}.stat-n.r{color:var(--red);}.stat-n.a{color:var(--amber);}.stat-n.p{color:var(--purple);}
+
+.pick{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.65rem .75rem;margin-bottom:.4rem;display:flex;align-items:center;gap:.5rem;}
+.pick-info{flex:1;min-width:0;}
+.pick-match{font-size:.8rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pick-meta{font-size:.62rem;color:var(--muted);margin-top:.1rem;}
+.pick-mkt{font-size:.6rem;font-weight:700;padding:.12rem .35rem;border-radius:4px;display:inline-block;margin-right:.3rem;}
+.pm-over{background:#2d1500;color:var(--over);}
+.pm-under{background:#002030;color:var(--under);}
+.pm-gg{background:#220050;color:var(--purple);}
+.pm-ng{background:#111;color:#9ca3af;}
+.pick-dots{display:flex;gap:.3rem;align-items:center;flex-shrink:0;}
+.dot{width:.75rem;height:.75rem;border-radius:50%;cursor:pointer;}
+.dot-g{background:var(--green);}
+.dot-r{background:var(--red);}
+.dot-x{background:#334155;display:flex;align-items:center;justify-content:center;font-size:.45rem;color:var(--muted);}
+.status{font-size:.65rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;}
+.st-p{background:var(--amber-bg);color:var(--amber);}
+.st-w{background:var(--green-bg);color:var(--green);}
+.st-l{background:var(--red-bg);color:var(--red);}
+.empty{text-align:center;color:var(--muted);font-size:.75rem;padding:1.5rem;background:var(--card);border:1px dashed var(--border);border-radius:10px;margin-bottom:.8rem;}
+
+/* FILTER ROW */
+.filter-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.75rem;}
+.filter-sel{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:.4rem .7rem;color:var(--text);font-family:'Archivo',sans-serif;font-size:.75rem;outline:none;flex:1;}
+.filter-hint{font-size:.6rem;color:var(--muted);text-align:right;letter-spacing:.06em;}
+
+/* PICK CARDS */
+.pick{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:.5rem;overflow:hidden;transition:border-color .15s;}
+.pick-expanded{border-color:var(--accent);}
+.pick-info{padding:.65rem .75rem;cursor:pointer;display:flex;flex-direction:column;gap:.15rem;}
+.pick-info:active{background:#0f172a;}
+.pick-match{font-size:.8rem;font-weight:700;}
+.pick-meta{font-size:.6rem;color:var(--muted);}
+.pick-mkt{font-size:.6rem;font-weight:700;padding:.12rem .35rem;border-radius:4px;display:inline-block;margin-right:.3rem;}
+.pm-over{background:#2d1500;color:var(--over);}
+.pm-under{background:#002030;color:var(--under);}
+.pm-gg{background:#220050;color:var(--purple);}
+.pm-ng{background:#111;color:#9ca3af;}
+.pick-dots{display:flex;gap:.3rem;align-items:center;flex-shrink:0;padding:.4rem .75rem;border-top:1px solid var(--border);background:#0f172a;}
+.dot{width:.75rem;height:.75rem;border-radius:50%;cursor:pointer;flex-shrink:0;}
+.dot-g{background:var(--green);}
+.dot-r{background:var(--red);}
+.dot-x{background:#334155;display:flex;align-items:center;justify-content:center;font-size:.45rem;color:var(--muted);}
+.status{font-size:.65rem;font-weight:700;padding:.15rem .4rem;border-radius:4px;margin-right:auto;}
+.st-p{background:var(--amber-bg);color:var(--amber);}
+.st-w{background:var(--green-bg);color:var(--green);}
+.st-l{background:var(--red-bg);color:var(--red);}
+.pick-notes{font-size:.62rem;color:var(--muted);font-style:italic;}
+
+/* PICK DETAIL EXPANDED */
+.pick-detail{padding:.75rem;border-top:1px solid var(--border);background:#080f1e;display:flex;flex-direction:column;gap:.5rem;}
+.pd-section{background:var(--card);border-radius:8px;padding:.55rem .7rem;}
+.pd-title{font-family:'Archivo Black',sans-serif;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.pd-val{font-size:.73rem;color:var(--text);line-height:1.5;}
+/* MENTAL NOTES */
+.notes-hints{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.65rem;}
+.hint-chip{background:#0f172a;border:1px solid var(--border);border-radius:999px;padding:.28rem .6rem;font-size:.65rem;color:var(--muted);cursor:pointer;transition:all .15s;}
+.hint-chip:active{background:var(--card);color:var(--accent);border-color:var(--accent);}
+.notes-box{width:100%;background:#0f172a;border:1.5px solid var(--border);border-radius:10px;padding:.7rem .8rem;color:var(--text);font-family:'Archivo',sans-serif;font-size:.82rem;line-height:1.6;resize:none;outline:none;min-height:90px;}
+.notes-box:focus{border-color:var(--accent);}
+.notes-box::placeholder{color:var(--muted);font-style:italic;}
+.notes-foot{font-size:.6rem;color:var(--muted);margin-top:.35rem;text-align:right;letter-spacing:.06em;}
+.pick-notes{font-size:.65rem;color:var(--muted);margin-top:.25rem;font-style:italic;line-height:1.4;border-top:1px solid var(--border);padding-top:.25rem;}
+
+/* SMART FACTOR CHIPS */
+.chip-row{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.5rem;}
+.chip{padding:.3rem .65rem;border-radius:999px;border:1.5px solid var(--border);background:#0f172a;color:var(--muted);font-size:.68rem;font-weight:600;cursor:pointer;transition:all .12s;font-family:'Archivo',sans-serif;}
+.chip.active{background:var(--accent);color:#0f172a;border-color:var(--accent);}
+
+/* COMBO SUGGESTER */
+.combo-card{background:linear-gradient(135deg,#1a0800,#2d1500);border:2px solid var(--over);border-radius:10px;padding:.8rem;margin-bottom:.75rem;}
+.combo-title{font-family:'Archivo Black',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--over);margin-bottom:.45rem;}
+.combo-body{font-size:.75rem;color:#fed7aa;line-height:1.6;}
+
+/* UPSET ALERT */
+.upset-card{background:linear-gradient(135deg,#1a1500,#2d2200);border:2px solid var(--amber);border-radius:10px;padding:.8rem;margin-bottom:.75rem;}
+.upset-title{font-family:'Archivo Black',sans-serif;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin-bottom:.45rem;}
+.upset-body{font-size:.75rem;color:#fde68a;line-height:1.6;}
+
+/* GOOGLE LINK */
+.lb-google{background:#0a1a0a;color:#34d399;border-color:#34d399;}
+
+/* ═══════════════════════════════════
+   DESKTOP RESPONSIVE — 768px+
+═══════════════════════════════════ */
+@media(min-width:768px){
+
+  body{font-size:15px;}
+
+  /* HEADER */
+  .hdr{padding:1rem 2rem;}
+  .hdr-title{font-size:1.4rem;}
+  .hdr-sub{font-size:.7rem;}
+  .live-tag{font-size:.7rem;padding:.3rem .8rem;}
+
+  /* TABS — bigger */
+  .mtabs{top:58px;}
+  .mtab{font-size:.75rem;padding:.85rem .5rem;letter-spacing:.1em;}
+
+  /* CONTENT — max width centred */
+  .pg{padding:1.5rem 2rem;max-width:1100px;margin:0 auto;}
+
+  /* DESKTOP TWO COLUMN — teams side by side */
+  .desktop-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;}
+
+  /* STEP CARDS */
+  .step{padding:1.2rem;border-radius:16px;margin-bottom:1rem;}
+  .step-hd{margin-bottom:1rem;}
+  .step-num{width:2rem;height:2rem;font-size:.85rem;}
+  .step-title{font-size:.95rem;}
+  .step-sub{font-size:.72rem;}
+
+  /* SEARCH */
+  .search-input{font-size:1rem;padding:.7rem .7rem .7rem 2.4rem;}
+  .drop-item{font-size:.9rem;padding:.65rem .9rem;}
+
+  /* INPUTS */
+  .num-input{font-size:1.1rem;padding:.6rem .7rem;}
+  .input-lbl{font-size:.7rem;}
+  .two-col{gap:.7rem;}
+
+  /* FORM BUTTONS */
+  .fb{width:2.4rem;height:2.4rem;font-size:.9rem;}
+
+  /* ANALYSE BUTTON */
+  .analyse-btn{font-size:1.05rem;padding:1rem;border-radius:12px;max-width:400px;display:block;margin:.75rem auto 0;}
+
+  /* RESULT SECTION */
+  .result-wrap{margin-top:1.2rem;}
+
+  /* VERDICT */
+  .verdict{padding:1.4rem;border-radius:16px;}
+  .v-title{font-size:1.6rem;}
+  .v-sub{font-size:.85rem;}
+  .v-lbl{font-size:.7rem;}
+
+  /* PROB PILLS — 4 in a row on desktop */
+  .prob-row{flex-wrap:nowrap;}
+  .prob-pill{padding:.8rem .5rem;}
+  .pp-val{font-size:1.3rem;}
+  .pp-lbl{font-size:.65rem;}
+
+  /* CONF BAR */
+  .conf-card{padding:1rem;}
+  .conf-top{font-size:.8rem;}
+  .conf-track{height:12px;}
+
+  /* TIPS */
+  .tips-card{padding:1rem;}
+  .tip{font-size:.82rem;padding:.25rem 0;}
+
+  /* ODDS CHECK */
+  .odds-card{padding:1rem;}
+  .odds-input{font-size:1.05rem;}
+  .check-btn{font-size:.82rem;padding:.6rem 1.1rem;}
+
+  /* LINKS — 3 per row on desktop */
+  .links-row{grid-template-columns:1fr 1fr 1fr;}
+  .link-btn{padding:.65rem;font-size:.78rem;}
+
+  /* SAVE/RESET */
+  .save-btn{max-width:400px;display:block;margin:.5rem auto;font-size:.9rem;}
+  .reset-btn{max-width:400px;display:block;margin:.5rem auto;}
+
+  /* COMBO / UPSET */
+  .combo-card,.upset-card{padding:1rem;}
+  .combo-body,.upset-body{font-size:.82rem;}
+
+  /* TRACKER */
+  .stats-row{gap:.7rem;margin-bottom:1rem;}
+  .stat-box{padding:.8rem .5rem;}
+  .stat-n{font-size:1.6rem;}
+  .stat-l{font-size:.65rem;}
+
+  .filter-row{margin-bottom:1rem;}
+  .filter-sel{font-size:.82rem;padding:.5rem .9rem;max-width:220px;flex:none;}
+  .filter-hint{font-size:.68rem;}
+
+  /* PICK CARDS */
+  .pick{border-radius:12px;margin-bottom:.6rem;}
+  .pick-info{padding:.8rem 1rem;}
+  .pick-match{font-size:.9rem;}
+  .pick-meta{font-size:.7rem;}
+  .pick-dots{padding:.5rem 1rem;}
+  .dot{width:.9rem;height:.9rem;}
+
+  /* PICK DETAIL */
+  .pick-detail{padding:1rem;gap:.6rem;}
+  .pd-section{padding:.65rem .85rem;border-radius:10px;}
+  .pd-title{font-size:.65rem;}
+  .pd-val{font-size:.82rem;}
+
+  /* SMART FACTORS */
+  .chip-row{gap:.4rem;}
+  .chip{font-size:.75rem;padding:.35rem .8rem;}
+
+  /* MENTAL NOTES */
+  .notes-box{font-size:.88rem;min-height:100px;}
+  .hint-chip{font-size:.72rem;padding:.3rem .7rem;}
+
+  /* DESKTOP RESULT LAYOUT — two col */
+  .result-desktop-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  .result-desktop-full{grid-column:span 2;}
+}
+
+@media(min-width:1100px){
+  .pg{padding:2rem 3rem;}
+  .hdr{padding:1rem 3rem;}
+}
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="hdr-title">🎯 GoalScope</div>
+    <div class="hdr-sub">Goals Prediction Tool</div>
+  </div>
+  <span class="live-tag">● Live</span>
+</div>
+
+<!-- TABS -->
+<div class="mtabs">
+  <div class="mtab active" onclick="goTab(0)">⚽ Over/Under</div>
+  <div class="mtab" onclick="goTab(1)">🎯 GG / NG</div>
+  <div class="mtab" onclick="goTab(2)">📋 Tracker</div>
+</div>
+
+<!-- ═══════════════════════ -->
+<!-- TAB 0 — OVER / UNDER  -->
+<!-- ═══════════════════════ -->
+<div class="pg active" id="pg-0">
+
+  <!-- STEP 1 & 2: TEAMS — side by side on desktop -->
+  <div class="desktop-cols">
+
+  <!-- STEP 1: HOME TEAM -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">1</div>
+      <div><div class="step-title">🏠 Home Team</div><div class="step-sub">Search and select</div></div>
+    </div>
+    <div class="err-msg" id="ou-h-err"></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="ou-h-name" placeholder="Type team name..." oninput="onType('ou-h')"/>
+      <button class="search-btn" onclick="doSearch('ou-h')">Go</button>
+    </div>
+    <div class="drop" id="ou-h-drop"></div>
+    <div id="ou-h-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
+    <div id="ou-h-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
+
+    <div class="dvd">avg goals per game</div>
+    <div class="two-col">
+      <div class="input-group"><div class="input-lbl">⚽ Scored</div><input class="num-input" id="ou-h-scored" type="number" step="0.1" min="0" placeholder="1.8"/></div>
+      <div class="input-group"><div class="input-lbl">🛡️ Conceded</div><input class="num-input" id="ou-h-conceded" type="number" step="0.1" min="0" placeholder="1.1"/></div>
+    </div>
+    <div class="dvd">last 5 results — tap to toggle</div>
+    <div class="form-row" id="ou-h-form"></div>
+  </div>
+
+  <!-- STEP 2: AWAY TEAM -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">2</div>
+      <div><div class="step-title">✈️ Away Team</div><div class="step-sub">Search and select</div></div>
+    </div>
+    <div class="err-msg" id="ou-a-err"></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="ou-a-name" placeholder="Type team name..." oninput="onType('ou-a')"/>
+      <button class="search-btn" onclick="doSearch('ou-a')">Go</button>
+    </div>
+    <div class="drop" id="ou-a-drop"></div>
+    <div id="ou-a-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
+    <div id="ou-a-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
+
+    <div class="dvd">avg goals per game</div>
+    <div class="two-col">
+      <div class="input-group"><div class="input-lbl">⚽ Scored</div><input class="num-input" id="ou-a-scored" type="number" step="0.1" min="0" placeholder="1.3"/></div>
+      <div class="input-group"><div class="input-lbl">🛡️ Conceded</div><input class="num-input" id="ou-a-conceded" type="number" step="0.1" min="0" placeholder="1.5"/></div>
+    </div>
+    <div class="dvd">last 5 results — tap to toggle</div>
+    <div class="form-row" id="ou-a-form"></div>
+  </div>
+
+  </div><!-- end desktop-cols -->
+
+  <!-- STEP 3: SMART FACTORS OU -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">3</div>
+      <div><div class="step-title">⚡ Smart Factors</div><div class="step-sub">Tap what applies — boosts accuracy</div></div>
+    </div>
+    <div class="dvd">H2H goals trend</div>
+    <div class="chip-row" id="ou-h2h-row">
+      <button class="chip active" onclick="setChip('ou-h2h','mixed',this)">⚖️ Mixed H2H</button>
+      <button class="chip" onclick="setChip('ou-h2h','high',this)">🔥 High scoring H2H</button>
+      <button class="chip" onclick="setChip('ou-h2h','low',this)">🔒 Low scoring H2H</button>
+    </div>
+    <div class="dvd">home / away form split</div>
+    <div class="chip-row" id="ou-venue-row">
+      <button class="chip active" onclick="setChip('ou-venue','normal',this)">😐 Both average</button>
+      <button class="chip" onclick="setChip('ou-venue','hstrong',this)">🏠 Home strong at home</button>
+      <button class="chip" onclick="setChip('ou-venue','astrong',this)">✈️ Away good travellers</button>
+      <button class="chip" onclick="setChip('ou-venue','aweak',this)">😟 Away weak on road</button>
+    </div>
+    <div class="dvd">rest & fatigue</div>
+    <div class="chip-row" id="ou-rest-row">
+      <button class="chip active" onclick="setChip('ou-rest','normal',this)">😊 Both rested</button>
+      <button class="chip" onclick="setChip('ou-rest','htired',this)">😴 Home played midweek</button>
+      <button class="chip" onclick="setChip('ou-rest','atired',this)">😴 Away played midweek</button>
+      <button class="chip" onclick="setChip('ou-rest','both',this)">💀 Both tired</button>
+    </div>
+    <div class="dvd">weather & pitch</div>
+    <div class="chip-row" id="ou-weather-row">
+      <button class="chip active" onclick="setChip('ou-weather','fine',this)">☀️ Fine</button>
+      <button class="chip" onclick="setChip('ou-weather','rain',this)">🌧️ Heavy rain</button>
+      <button class="chip" onclick="setChip('ou-weather','wind',this)">💨 Strong wind</button>
+      <button class="chip" onclick="setChip('ou-weather','heavy',this)">🪨 Heavy pitch</button>
+    </div>
+    <div class="dvd">referee tendency</div>
+    <div class="chip-row" id="ou-ref-row">
+      <button class="chip active" onclick="setChip('ou-ref','normal',this)">😐 Normal</button>
+      <button class="chip" onclick="setChip('ou-ref','lenient',this)">🟢 Lets play flow</button>
+      <button class="chip" onclick="setChip('ou-ref','strict',this)">🟥 Lots of stoppages</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: MENTAL NOTES OU -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">4</div>
+      <div><div class="step-title">🧠 Your Mental Notes</div><div class="step-sub">What you see that stats can't show</div></div>
+    </div>
+    <div class="notes-hints">
+      <div class="hint-chip">🤕 Key injuries?</div>
+      <div class="hint-chip">🌧️ Weather/pitch?</div>
+      <div class="hint-chip">😤 Motivated team?</div>
+      <div class="hint-chip">🔄 Squad rotation?</div>
+      <div class="hint-chip">📺 Eye test feel?</div>
+      <div class="hint-chip">⚡ Revenge game?</div>
+    </div>
+    <textarea class="notes-box" id="ou-notes" placeholder="e.g. Home striker is injured, away team just played midweek, pitch is heavy after rain, home fans will be loud — all points toward a tight low scoring game..."></textarea>
+    <div class="notes-foot">Your notes are saved with your pick in the Tracker</div>
+  </div>
+
+  <button class="analyse-btn" onclick="calcOU()">⚡ Get Over/Under Prediction</button>
+
+  <!-- RESULT -->
+  <div class="result-wrap" id="ou-result">
+
+    <div class="verdict neutral" id="ou-verdict">
+      <div class="v-lbl">Over / Under Signal</div>
+      <div class="v-title" id="ou-v-title">—</div>
+      <div class="v-sub" id="ou-v-sub">—</div>
+    </div>
+
+    <div class="prob-row" id="ou-probs"></div>
+
+    <div class="conf-card">
+      <div class="conf-top"><span>Confidence</span><span id="ou-conf-pct">—</span></div>
+      <div class="conf-track"><div class="conf-bar" id="ou-conf-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- COMBO SUGGESTER -->
+    <div class="combo-card" id="ou-combo" style="display:none">
+      <div class="combo-title">🔥 Combo Market Suggestion</div>
+      <div class="combo-body" id="ou-combo-body"></div>
+    </div>
+
+    <!-- UPSET ALERT -->
+    <div class="upset-card" id="ou-upset" style="display:none">
+      <div class="upset-title">⚠️ Upset Alert</div>
+      <div class="upset-body" id="ou-upset-body"></div>
+    </div>
+
+    <div class="tips-card" id="ou-tips"><h3>💡 Notes</h3></div>
+
+    <div class="odds-card">
+      <h3>💰 Check Odds Value</h3>
+      <div class="odds-row">
+        <div class="odds-input-wrap">
+          <div class="odds-lbl">Bookmaker Odds</div>
+          <input class="odds-input" id="ou-odds" type="number" step="0.01" min="1" placeholder="e.g. 1.85"/>
+        </div>
+        <button class="check-btn" onclick="checkOdds('ou')">Check</button>
+      </div>
+      <div class="odds-result" id="ou-odds-result"></div>
+    </div>
+
+    <div class="links-title">🔗 Check Live Odds & Stats</div>
+    <div class="links-row">
+      <a class="link-btn lb-flash" id="ou-lk-flash" href="#" target="_blank">⚡ Flashscore</a>
+      <a class="link-btn lb-sofa"  id="ou-lk-sofa"  href="#" target="_blank">📊 SofaScore</a>
+      <a class="link-btn lb-odds"  id="ou-lk-odds"  href="#" target="_blank">💷 Oddschecker</a>
+      <a class="link-btn lb-port"  id="ou-lk-port"  href="#" target="_blank">📉 OddsPortal</a>
+      <a class="link-btn lb-google" id="ou-lk-google" href="#" target="_blank" style="grid-column:span 2">🔍 Google Search — Scores & Stats</a>
+    </div>
+
+    <button class="save-btn" onclick="saveOUPick()">💾 Save Pick to Tracker</button>
+    <button class="reset-btn" onclick="resetOU()">↺ Start Over</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ -->
+<!-- TAB 1 — GG / NG        -->
+<!-- ═══════════════════════ -->
+<div class="pg" id="pg-1">
+
+  <div class="desktop-cols">
+
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">1</div>
+      <div><div class="step-title">🏠 Home Team</div><div class="step-sub">Search and select</div></div>
+    </div>
+    <div class="err-msg" id="gg-h-err"></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="gg-h-name" placeholder="Type team name..." oninput="onType('gg-h')"/>
+      <button class="search-btn" onclick="doSearch('gg-h')">Go</button>
+    </div>
+    <div class="drop" id="gg-h-drop"></div>
+    <div id="gg-h-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
+    <div id="gg-h-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
+
+    <div class="dvd">last 10 games stats</div>
+    <div class="two-col">
+      <div class="input-group"><div class="input-lbl">⚽ Games Scored</div><input class="num-input" id="gg-h-sc" type="number" min="0" max="10" placeholder="7"/></div>
+      <div class="input-group"><div class="input-lbl">🛡️ Clean Sheets</div><input class="num-input" id="gg-h-cs" type="number" min="0" max="10" placeholder="3"/></div>
+    </div>
+    <div class="dvd">last 5 results</div>
+    <div class="form-row" id="gg-h-form"></div>
+  </div>
+
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">2</div>
+      <div><div class="step-title">✈️ Away Team</div><div class="step-sub">Search and select</div></div>
+    </div>
+    <div class="err-msg" id="gg-a-err"></div>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" id="gg-a-name" placeholder="Type team name..." oninput="onType('gg-a')"/>
+      <button class="search-btn" onclick="doSearch('gg-a')">Go</button>
+    </div>
+    <div class="drop" id="gg-a-drop"></div>
+    <div id="gg-a-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
+    <div id="gg-a-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
+
+    <div class="dvd">last 10 games stats</div>
+    <div class="two-col">
+      <div class="input-group"><div class="input-lbl">⚽ Games Scored</div><input class="num-input" id="gg-a-sc" type="number" min="0" max="10" placeholder="6"/></div>
+      <div class="input-group"><div class="input-lbl">🛡️ Clean Sheets</div><input class="num-input" id="gg-a-cs" type="number" min="0" max="10" placeholder="4"/></div>
+    </div>
+    <div class="dvd">last 5 results</div>
+    <div class="form-row" id="gg-a-form"></div>
+  </div>
+
+  </div><!-- end desktop-cols -->
+
+  <!-- STEP 3: SMART FACTORS GG -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">3</div>
+      <div><div class="step-title">⚡ Smart Factors</div><div class="step-sub">Tap what applies — boosts accuracy</div></div>
+    </div>
+    <div class="dvd">H2H BTTS trend</div>
+    <div class="chip-row" id="gg-h2h-row">
+      <button class="chip active" onclick="setChip('gg-h2h','mixed',this)">⚖️ Mixed H2H</button>
+      <button class="chip" onclick="setChip('gg-h2h','gg',this)">🎯 Usually GG in H2H</button>
+      <button class="chip" onclick="setChip('gg-h2h','ng',this)">🔒 Usually NG in H2H</button>
+    </div>
+    <div class="dvd">rest & fatigue</div>
+    <div class="chip-row" id="gg-rest-row">
+      <button class="chip active" onclick="setChip('gg-rest','normal',this)">😊 Both rested</button>
+      <button class="chip" onclick="setChip('gg-rest','htired',this)">😴 Home played midweek</button>
+      <button class="chip" onclick="setChip('gg-rest','atired',this)">😴 Away played midweek</button>
+      <button class="chip" onclick="setChip('gg-rest','both',this)">💀 Both tired</button>
+    </div>
+    <div class="dvd">weather & pitch</div>
+    <div class="chip-row" id="gg-weather-row">
+      <button class="chip active" onclick="setChip('gg-weather','fine',this)">☀️ Fine</button>
+      <button class="chip" onclick="setChip('gg-weather','rain',this)">🌧️ Heavy rain</button>
+      <button class="chip" onclick="setChip('gg-weather','wind',this)">💨 Strong wind</button>
+      <button class="chip" onclick="setChip('gg-weather','heavy',this)">🪨 Heavy pitch</button>
+    </div>
+    <div class="dvd">referee tendency</div>
+    <div class="chip-row" id="gg-ref-row">
+      <button class="chip active" onclick="setChip('gg-ref','normal',this)">😐 Normal</button>
+      <button class="chip" onclick="setChip('gg-ref','lenient',this)">🟢 Lets play flow</button>
+      <button class="chip" onclick="setChip('gg-ref','strict',this)">🟥 Lots of stoppages</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: MENTAL NOTES GG -->
+  <div class="step">
+    <div class="step-hd">
+      <div class="step-num">4</div>
+      <div><div class="step-title">🧠 Your Mental Notes</div><div class="step-sub">What you see that stats can't show</div></div>
+    </div>
+    <div class="notes-hints">
+      <div class="hint-chip">🤕 Key injuries?</div>
+      <div class="hint-chip">🌧️ Weather/pitch?</div>
+      <div class="hint-chip">😤 Motivated team?</div>
+      <div class="hint-chip">🔄 Squad rotation?</div>
+      <div class="hint-chip">📺 Eye test feel?</div>
+      <div class="hint-chip">⚡ Revenge game?</div>
+    </div>
+    <textarea class="notes-box" id="gg-notes" placeholder="e.g. Both teams play attacking football, away keeper is new and untested, home team scored in last 8 straight games, this fixture is always end to end..."></textarea>
+    <div class="notes-foot">Your notes are saved with your pick in the Tracker</div>
+  </div>
+
+  <button class="analyse-btn" onclick="calcGG()">⚡ Get GG / NG Prediction</button>
+
+  <!-- GG RESULT -->
+  <div class="result-wrap" id="gg-result">
+
+    <div class="verdict neutral" id="gg-verdict">
+      <div class="v-lbl">BTTS Signal</div>
+      <div class="v-title" id="gg-v-title">—</div>
+      <div class="v-sub" id="gg-v-sub">—</div>
+    </div>
+
+    <div class="prob-row" id="gg-probs"></div>
+
+    <div class="conf-card">
+      <div class="conf-top"><span>Confidence</span><span id="gg-conf-pct">—</span></div>
+      <div class="conf-track"><div class="conf-bar" id="gg-conf-bar" style="width:0%"></div></div>
+    </div>
+
+    <!-- COMBO SUGGESTER -->
+    <div class="combo-card" id="gg-combo" style="display:none">
+      <div class="combo-title">🔥 Combo Market Suggestion</div>
+      <div class="combo-body" id="gg-combo-body"></div>
+    </div>
+
+    <!-- UPSET ALERT -->
+    <div class="upset-card" id="gg-upset" style="display:none">
+      <div class="upset-title">⚠️ Upset Alert</div>
+      <div class="upset-body" id="gg-upset-body"></div>
+    </div>
+
+    <div class="tips-card" id="gg-tips"><h3>💡 Notes</h3></div>
+
+    <div class="odds-card">
+      <h3>💰 Check Odds Value</h3>
+      <div class="odds-row">
+        <div class="odds-input-wrap">
+          <div class="odds-lbl">Bookmaker Odds</div>
+          <input class="odds-input" id="gg-odds" type="number" step="0.01" min="1" placeholder="e.g. 1.75"/>
+        </div>
+        <button class="check-btn" onclick="checkOdds('gg')">Check</button>
+      </div>
+      <div class="odds-result" id="gg-odds-result"></div>
+    </div>
+
+    <div class="links-title">🔗 Check Live Odds & Stats</div>
+    <div class="links-row">
+      <a class="link-btn lb-flash" id="gg-lk-flash" href="#" target="_blank">⚡ Flashscore</a>
+      <a class="link-btn lb-sofa"  id="gg-lk-sofa"  href="#" target="_blank">📊 SofaScore</a>
+      <a class="link-btn lb-odds"  id="gg-lk-odds"  href="#" target="_blank">💷 Oddschecker</a>
+      <a class="link-btn lb-port"  id="gg-lk-port"  href="#" target="_blank">📉 OddsPortal</a>
+      <a class="link-btn lb-google" id="gg-lk-google" href="#" target="_blank" style="grid-column:span 2">🔍 Google Search — Scores & Stats</a>
+    </div>
+
+    <button class="save-btn" onclick="saveGGPick()">💾 Save Pick to Tracker</button>
+    <button class="reset-btn" onclick="resetGG()">↺ Start Over</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════ -->
+<!-- TAB 2 — TRACKER        -->
+<!-- ═══════════════════════ -->
+<div class="pg" id="pg-2">
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-box"><div class="stat-n a" id="t-tot">0</div><div class="stat-l">Picks</div></div>
+    <div class="stat-box"><div class="stat-n g" id="t-win">0</div><div class="stat-l">Won ✅</div></div>
+    <div class="stat-box"><div class="stat-n r" id="t-loss">0</div><div class="stat-l">Lost ❌</div></div>
+    <div class="stat-box"><div class="stat-n p" id="t-rate">—</div><div class="stat-l">Hit Rate</div></div>
+  </div>
+
+  <!-- FILTER -->
+  <div class="filter-row">
+    <select class="filter-sel" id="t-filter" onchange="renderTracker()">
+      <option value="all">All Picks</option>
+      <option value="pending">⏳ Pending</option>
+      <option value="won">✅ Won</option>
+      <option value="lost">❌ Lost</option>
+    </select>
+    <div class="filter-hint">Tap any pick to see full details</div>
+  </div>
+
+  <div id="picks-list"></div>
+
+  <button class="reset-btn" style="margin-top:.5rem" onclick="clearPicks()">🗑️ Clear All Picks</button>
+</div>
+
+<script>
+const API='e26ca55119d1aef878d9e20709cee675';
+let tmr=null;
+let ouProb={over25:0,under25:0,over15:0,under35:0};
+let ggProb={gg:0,ng:0};
+let picks=JSON.parse(localStorage.getItem('gs2_picks')||'[]');
+let expandedPick=null;
+
+// Smart factor chip state
+const chips={
+  'ou-h2h':'mixed','ou-venue':'normal','ou-rest':'normal','ou-weather':'fine','ou-ref':'normal',
+  'gg-h2h':'mixed','gg-rest':'normal','gg-weather':'fine','gg-ref':'normal'
+};
+
+function setChip(key,val,btn){
+  chips[key]=val;
+  btn.closest('.chip-row').querySelectorAll('.chip').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Build form buttons
+['ou-h','ou-a','gg-h','gg-a'].forEach(id=>{
+  const c=document.getElementById(id+'-form');
+  for(let i=0;i<5;i++){
+    const b=document.createElement('button');
+    b.className='fb';b.textContent='?';b.dataset.v='';
+    b.onclick=function(){
+      const s=['','W','D','L'];
+      const n=s[(s.indexOf(this.dataset.v)+1)%s.length];
+      this.dataset.v=n;this.textContent=n||'?';
+      this.className='fb'+(n?' '+n:'');
+    };
+    c.appendChild(b);
+  }
+});
+
+renderTracker();
+
+// ── TABS ──
+function goTab(i){
+  document.querySelectorAll('.mtab').forEach((t,x)=>t.classList.toggle('active',x===i));
+  document.querySelectorAll('.pg').forEach((p,x)=>p.classList.toggle('active',x===i));
+}
+
+// ── SEARCH ──
+function onType(id){
+  clearTimeout(tmr);hideDrop(id);hideErr(id);
+  if(document.getElementById(id+'-name').value.trim().length<3)return;
+  tmr=setTimeout(()=>doSearch(id),600);
+}
+
+async function doSearch(id){
+  const q=document.getElementById(id+'-name').value.trim();
+  if(q.length<2)return;
+  showLoad(id,true);hideDrop(id);hideErr(id);
+  try{
+    const r=await fetch(`https://v3.football.api-sports.io/teams?search=${encodeURIComponent(q)}`,{headers:{'x-apisports-key':API}});
+    const d=await r.json();showLoad(id,false);
+    if(d.errors&&Object.keys(d.errors).length){showErr(id,'API error — try again');return;}
+    const ts=d.response||[];
+    if(!ts.length){showErr(id,'No teams found');return;}
+    showDrop(id,ts.slice(0,6));
+  }catch(e){showLoad(id,false);showErr(id,'Network error');}
+}
+
+function showDrop(id,teams){
+  const c=document.getElementById(id+'-drop');c.style.display='block';
+  c.innerHTML=teams.map(t=>`
+    <div class="drop-item" onclick="pickTeam('${id}',${t.team.id},'${t.team.name.replace(/'/g,"\\'")}')">
+      ${t.team.logo?`<img class="tlogo" src="${t.team.logo}" onerror="this.style.display='none'"/>`:'⚽'}
+      <span>${t.team.name} <span style="color:var(--muted);font-size:.62rem">${t.venue?.city||''}</span></span>
+    </div>`).join('');
+}
+
+async function pickTeam(id,teamId,name){
+  document.getElementById(id+'-name').value=name;
+  hideDrop(id);hideErr(id);showLoad(id,true);
+  try{
+    const r=await fetch(`https://v3.football.api-sports.io/fixtures?team=${teamId}&last=10&status=FT`,{headers:{'x-apisports-key':API}});
+    const d=await r.json();showLoad(id,false);
+    const fx=d.response||[];
+    if(!fx.length){showErr(id,'No fixtures found — fill manually');return;}
+
+    let scored=0,conceded=0,gamesScored=0,cs=0;
+    fx.slice(0,10).forEach(f=>{
+      const isH=f.teams.home.id===teamId;
+      const gs=isH?f.goals.home:f.goals.away;
+      const gc=isH?f.goals.away:f.goals.home;
+      if(gs===null||gc===null)return;
+      scored+=gs;conceded+=gc;
+      if(gs>0)gamesScored++;
+      if(gc===0)cs++;
+    });
+    const g=Math.min(fx.length,10);
+    const avgSc=(scored/g).toFixed(2);
+    const avgCo=(conceded/g).toFixed(2);
+
+    // Fill OU inputs
+    const ouSc=document.getElementById('ou-'+id.split('-')[1]+'-scored');
+    const ouCo=document.getElementById('ou-'+id.split('-')[1]+'-conceded');
+    if(ouSc)ouSc.value=avgSc;
+    if(ouCo)ouCo.value=avgCo;
+
+    // Fill GG inputs
+    const ggSc=document.getElementById('gg-'+id.split('-')[1]+'-sc');
+    const ggCs=document.getElementById('gg-'+id.split('-')[1]+'-cs');
+    if(ggSc)ggSc.value=gamesScored;
+    if(ggCs)ggCs.value=cs;
+
+    // Fill form buttons (both tabs)
+    ['ou-'+id.split('-')[1],'gg-'+id.split('-')[1]].forEach(fid=>{
+      const btns=document.querySelectorAll('#'+fid+'-form .fb');
+      fx.slice(0,5).forEach((f,i)=>{
+        const isH=f.teams.home.id===teamId;
+        const gs=isH?f.goals.home:f.goals.away;
+        const gc=isH?f.goals.away:f.goals.home;
+        if(gs===null||gc===null||!btns[i])return;
+        const res=gs===gc?'D':gs>gc?'W':'L';
+        btns[i].dataset.v=res;btns[i].textContent=res;btns[i].className='fb '+res;
+      });
+    });
+
+    document.getElementById(id+'-auto').style.display='block';
+  }catch(e){showLoad(id,false);showErr(id,'Error loading stats');}
+}
+
+function hideDrop(id){const e=document.getElementById(id+'-drop');if(e)e.style.display='none';}
+function showErr(id,m){const e=document.getElementById(id+'-err');if(e){e.textContent='⚠️ '+m;e.style.display='block';}}
+function hideErr(id){const e=document.getElementById(id+'-err');if(e)e.style.display='none';}
+function showLoad(id,s){const e=document.getElementById(id+'-load');if(e)e.style.display=s?'block':'none';}
+
+// ── POISSON ──
+function fact(n){if(n<=1)return 1;let r=1;for(let i=2;i<=n;i++)r*=i;return r;}
+function poi(l,k){return(Math.pow(l,k)*Math.exp(-l))/fact(k);}
+
+// ── OVER / UNDER ──
+function calcOU(){
+  const hSc=parseFloat(document.getElementById('ou-h-scored').value)||0;
+  const hCo=parseFloat(document.getElementById('ou-h-conceded').value)||0;
+  const aSc=parseFloat(document.getElementById('ou-a-scored').value)||0;
+  const aCo=parseFloat(document.getElementById('ou-a-conceded').value)||0;
+  if(!hSc||!aSc){alert('Enter goals scored for both teams first!');return;}
+
+  const leagueAvg=2.65;
+  let hxg=Math.max(0.1,(hSc*hCo)/leagueAvg);
+  let axg=Math.max(0.1,(aSc*aCo)/leagueAvg);
+
+  // Smart factor adjustments
+  if(chips['ou-h2h']==='high'){hxg*=1.12;axg*=1.12;}
+  if(chips['ou-h2h']==='low'){hxg*=0.88;axg*=0.88;}
+  if(chips['ou-venue']==='hstrong'){hxg*=1.1;}
+  if(chips['ou-venue']==='astrong'){axg*=1.08;}
+  if(chips['ou-venue']==='aweak'){axg*=0.88;}
+  if(chips['ou-rest']==='htired'){hxg*=0.85;}
+  if(chips['ou-rest']==='atired'){axg*=0.85;}
+  if(chips['ou-rest']==='both'){hxg*=0.88;axg*=0.88;}
+  if(chips['ou-weather']==='rain'||chips['ou-weather']==='heavy'){hxg*=0.82;axg*=0.82;}
+  if(chips['ou-weather']==='wind'){hxg*=0.9;axg*=0.9;}
+  if(chips['ou-ref']==='strict'){hxg*=0.93;axg*=0.93;}
+  if(chips['ou-ref']==='lenient'){hxg*=1.05;axg*=1.05;}
+
+  // Poisson
+  let o15=0,u15=0,o25=0,u25=0,o35=0,u35=0;
+  for(let h=0;h<=8;h++) for(let a=0;a<=8;a++){
+    const p=poi(hxg,h)*poi(axg,a);
+    const tot=h+a;
+    if(tot>1.5)o15+=p;else u15+=p;
+    if(tot>2.5)o25+=p;else u25+=p;
+    if(tot>3.5)o35+=p;else u35+=p;
+  }
+  ouProb={over25:o25,under25:u25,over15:o15,under15:u15,over35:o35,under35:u35};
+
+  // Verdict
+  const hn=document.getElementById('ou-h-name').value||'Home';
+  const an=document.getElementById('ou-a-name').value||'Away';
+  let cls,title,sub,conf,barColor;
+  if(o25>0.65){cls='over';title='✅ OVER 2.5 GOALS';sub='High scoring match expected';conf=Math.round(o25*100);barColor='var(--over)';}
+  else if(o25>0.55){cls='over';title='🟠 LEAN OVER 2.5';sub='More likely to go over';conf=Math.round(o25*100);barColor='var(--over)';}
+  else if(u25>0.60){cls='under';title='✅ UNDER 2.5 GOALS';sub='Tight low scoring match expected';conf=Math.round(u25*100);barColor='var(--under)';}
+  else if(u25>0.52){cls='under';title='🔵 LEAN UNDER 2.5';sub='Slight lean toward under';conf=Math.round(u25*100);barColor='var(--under)';}
+  else{cls='neutral';title='⚪ TOO CLOSE TO CALL';sub='No strong signal either way';conf=50;barColor='var(--muted)';}
+
+  document.getElementById('ou-verdict').className='verdict '+cls;
+  document.getElementById('ou-v-title').textContent=title;
+  document.getElementById('ou-v-sub').textContent=sub;
+
+  document.getElementById('ou-probs').innerHTML=`
+    <div class="prob-pill ${o15>0.5?'highlight':''}"><div class="pp-lbl">Over 1.5</div><div class="pp-val over-c">${p(o15)}</div></div>
+    <div class="prob-pill ${o25>0.5?'highlight':''}"><div class="pp-lbl">Over 2.5</div><div class="pp-val over-c">${p(o25)}</div></div>
+    <div class="prob-pill ${u25>0.5?'highlight':''}"><div class="pp-lbl">Under 2.5</div><div class="pp-val under-c">${p(u25)}</div></div>
+    <div class="prob-pill ${o35>0.5?'highlight':''}"><div class="pp-lbl">Over 3.5</div><div class="pp-val over-c">${p(o35)}</div></div>`;
+
+  setTimeout(()=>{
+    document.getElementById('ou-conf-bar').style.width=conf+'%';
+    document.getElementById('ou-conf-bar').style.background=barColor;
+    document.getElementById('ou-conf-pct').textContent=conf+'%';
+  },150);
+
+  // Tips
+  const tips=[];
+  if(hxg+axg>3.2)tips.push('Total xG is '+((hxg+axg).toFixed(2))+' — strong over 2.5 case');
+  if(hxg+axg<2.0)tips.push('Total xG is only '+((hxg+axg).toFixed(2))+' — under 2.5 likely');
+  if(o15>0.82)tips.push('Over 1.5 at '+p(o15)+' — almost certain to have 2+ goals');
+  if(u25>0.60&&o15>0.75)tips.push('1-0, 0-1 or 1-1 are the most likely scores');
+  document.getElementById('ou-tips').innerHTML=`<h3>💡 Notes</h3>${tips.length?tips.map(t=>`<div class="tip">${t}</div>`).join(''):'<div class="tip">Stats look balanced — check live odds for value</div>'}`;
+
+  // Combo suggester
+  const comboEl=document.getElementById('ou-combo');
+  const comboBody=document.getElementById('ou-combo-body');
+  const combos=[];
+  if(o15>0.78&&ggProb.gg>0.55) combos.push(`✅ Over 1.5 + GG Yes — both at ${p(o15)} / ${p(ggProb.gg)} — strong acca`);
+  if(o25>0.62&&ggProb.gg>0.60) combos.push(`🔥 Over 2.5 + GG Yes — high scoring game backed ${p(o25)} / ${p(ggProb.gg)}`);
+  if(u25>0.60&&ggProb.ng>0.50) combos.push(`🔒 Under 2.5 + NG — tight game both sides lean ${p(u25)} / ${p(ggProb.ng)}`);
+  if(combos.length){comboEl.style.display='block';comboBody.innerHTML=combos.map(c=>`<div style="margin-bottom:.3rem">${c}</div>`).join('');}
+  else comboEl.style.display='none';
+
+  // Upset alert
+  const upsetEl=document.getElementById('ou-upset');
+  const upsetBody=document.getElementById('ou-upset-body');
+  const upsets=[];
+  if(chips['ou-rest']==='htired'&&hxg>axg) upsets.push('Home favoured but tired from midweek — away could upset the odds');
+  if(chips['ou-weather']==='rain'||chips['ou-weather']==='heavy') upsets.push('Poor conditions can neutralise stronger teams — upsets more likely');
+  if(chips['ou-h2h']==='low'&&o25>0.55) upsets.push('H2H says low scoring but model leans over — one of them will surprise');
+  if(chips['ou-venue']==='aweak'&&axg>1.2) upsets.push('Away has poor travel record but their attacking stats say otherwise — watch them');
+  if(upsets.length){upsetEl.style.display='block';upsetBody.innerHTML=upsets.map(u=>`<div style="margin-bottom:.3rem">→ ${u}</div>`).join('');}
+  else upsetEl.style.display='none';
+
+  // Links
+  setLinks('ou',hn,an);
+
+  document.getElementById('ou-result').style.display='block';
+  document.getElementById('ou-result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── GG / NG ──
+function calcGG(){
+  const hSc=parseInt(document.getElementById('gg-h-sc').value)||0;
+  const hCs=parseInt(document.getElementById('gg-h-cs').value)||0;
+  const aSc=parseInt(document.getElementById('gg-a-sc').value)||0;
+  const aCs=parseInt(document.getElementById('gg-a-cs').value)||0;
+  if(!hSc&&!aSc){alert('Enter scoring stats for both teams first!');return;}
+
+  const hScP=hSc/10;
+  const aScP=aSc/10;
+  const hCsP=hCs/10;
+  const aCsP=aCs/10;
+
+  // P(home scores) adjusted by away clean sheet rate
+  let pHS=Math.min(0.97,hScP*(1-aCsP*0.5));
+  let pAS=Math.min(0.97,aScP*(1-hCsP*0.5));
+
+  // Smart factor adjustments
+  if(chips['gg-h2h']==='gg'){pHS=Math.min(0.97,pHS*1.1);pAS=Math.min(0.97,pAS*1.1);}
+  if(chips['gg-h2h']==='ng'){pHS*=0.9;pAS*=0.9;}
+  if(chips['gg-rest']==='htired'){pHS*=0.88;}
+  if(chips['gg-rest']==='atired'){pAS*=0.88;}
+  if(chips['gg-rest']==='both'){pHS*=0.88;pAS*=0.88;}
+  if(chips['gg-weather']==='rain'||chips['gg-weather']==='heavy'){pHS*=0.9;pAS*=0.9;}
+  if(chips['gg-ref']==='strict'){pHS*=0.93;pAS*=0.93;}
+  if(chips['gg-ref']==='lenient'){pHS=Math.min(0.97,pHS*1.05);pAS=Math.min(0.97,pAS*1.05);}
+  const gg=pHS*pAS;
+  const ng=1-gg;
+  ggProb={gg,ng};
+
+  const hn=document.getElementById('gg-h-name').value||'Home';
+  const an=document.getElementById('gg-a-name').value||'Away';
+
+  let cls,title,sub,conf,barColor;
+  if(gg>=0.68){cls='gg';title='✅ GG — BOTH SCORE';sub='Both teams very likely to score';conf=Math.round(gg*100);barColor='var(--purple)';}
+  else if(gg>=0.56){cls='gg';title='🟣 LEAN GG YES';sub='Slightly favour both teams scoring';conf=Math.round(gg*100);barColor='var(--purple)';}
+  else if(ng>=0.62){cls='ng';title='✅ NG — ONE TEAM BLANKS';sub='At least one team likely to not score';conf=Math.round(ng*100);barColor='#6b7280';}
+  else if(ng>=0.52){cls='ng';title='⚫ LEAN NG';sub='Slight lean toward no goal one side';conf=Math.round(ng*100);barColor='#6b7280';}
+  else{cls='neutral';title='⚪ TOO CLOSE';sub='No strong signal — skip or wait';conf=50;barColor='var(--muted)';}
+
+  document.getElementById('gg-verdict').className='verdict '+cls;
+  document.getElementById('gg-v-title').textContent=title;
+  document.getElementById('gg-v-sub').textContent=sub;
+
+  document.getElementById('gg-probs').innerHTML=`
+    <div class="prob-pill ${gg>0.5?'highlight':''}"><div class="pp-lbl">GG Yes</div><div class="pp-val gg-c">${p(gg)}</div></div>
+    <div class="prob-pill ${ng>0.5?'highlight':''}"><div class="pp-lbl">NG / No</div><div class="pp-val ng-c">${p(ng)}</div></div>`;
+
+  setTimeout(()=>{
+    document.getElementById('gg-conf-bar').style.width=conf+'%';
+    document.getElementById('gg-conf-bar').style.background=barColor;
+    document.getElementById('gg-conf-pct').textContent=conf+'%';
+  },150);
+
+  // Tips
+  const tips=[];
+  if(hScP>=0.8&&aScP>=0.8)tips.push('Both teams score in 80%+ of games — strong GG');
+  if(hCs>=5)tips.push('Home team has '+hCs+' clean sheets — away may not score');
+  if(aCs>=5)tips.push('Away team has '+aCs+' clean sheets — home may not score');
+  if(hScP>=0.8&&aCs<=2)tips.push('Home likely to score, away rarely keeps clean sheets');
+  document.getElementById('gg-tips').innerHTML=`<h3>💡 Notes</h3>${tips.length?tips.map(t=>`<div class="tip">${t}</div>`).join(''):'<div class="tip">Check H2H history on Flashscore for extra confidence</div>'}`;
+
+  // Combo suggester
+  const gComboEl=document.getElementById('gg-combo');
+  const gComboBody=document.getElementById('gg-combo-body');
+  const gCombos=[];
+  if(gg>0.60&&ouProb.over15>0.78) gCombos.push(`✅ GG Yes + Over 1.5 — classic combo ${p(gg)} / ${p(ouProb.over15)}`);
+  if(gg>0.60&&ouProb.over25>0.55) gCombos.push(`🔥 GG Yes + Over 2.5 — both teams score and goals flow ${p(gg)} / ${p(ouProb.over25)}`);
+  if(ng>0.58&&ouProb.under25>0.55) gCombos.push(`🔒 NG + Under 2.5 — tight defensive match backed ${p(ng)} / ${p(ouProb.under25)}`);
+  if(gCombos.length){gComboEl.style.display='block';gComboBody.innerHTML=gCombos.map(c=>`<div style="margin-bottom:.3rem">${c}</div>`).join('');}
+  else gComboEl.style.display='none';
+
+  // Upset alert
+  const gUpsetEl=document.getElementById('gg-upset');
+  const gUpsetBody=document.getElementById('gg-upset-body');
+  const gUpsets=[];
+  if(chips['gg-rest']==='htired'&&gg>0.55) gUpsets.push('Home tired but model says GG — could still score but defensively exposed');
+  if(chips['gg-weather']==='rain'&&gg>0.60) gUpsets.push('Heavy rain may kill chances despite both teams strong scoring form');
+  if(chips['gg-h2h']==='ng'&&gg>0.55) gUpsets.push('H2H says NG but current form says GG — this fixture could go either way');
+  if(gUpsets.length){gUpsetEl.style.display='block';gUpsetBody.innerHTML=gUpsets.map(u=>`<div style="margin-bottom:.3rem">→ ${u}</div>`).join('');}
+  else gUpsetEl.style.display='none';
+
+  // Links
+  setLinks('gg',hn,an);
+
+  document.getElementById('gg-result').style.display='block';
+  document.getElementById('gg-result').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ── ODDS CHECK ──
+function checkOdds(mode){
+  const odds=parseFloat(document.getElementById(mode+'-odds').value);
+  const res=document.getElementById(mode+'-odds-result');
+  if(!odds||odds<1){res.style.display='block';res.className='odds-result fair';res.textContent='Enter valid decimal odds (e.g. 1.85)';return;}
+  const bookP=1/odds;
+  let modelP=0;
+  if(mode==='ou') modelP=ouProb.over25>0.5?ouProb.over25:ouProb.under25;
+  else modelP=ggProb.gg>0.5?ggProb.gg:ggProb.ng;
+  if(!modelP){res.style.display='block';res.className='odds-result fair';res.textContent='Run analysis first!';return;}
+  const edge=((modelP-bookP)/bookP)*100;
+  res.style.display='block';
+  if(edge>10){res.className='odds-result good';res.textContent=`✅ VALUE BET! Model: ${p(modelP)} vs Book: ${p(bookP)} — Edge: +${edge.toFixed(1)}%`;}
+  else if(edge>0){res.className='odds-result fair';res.textContent=`🟡 Marginal value. Model: ${p(modelP)} vs Book: ${p(bookP)} — Edge +${edge.toFixed(1)}%`;}
+  else{res.className='odds-result bad';res.textContent=`❌ No value. Book price (${p(bookP)}) is better than model (${p(modelP)}). Skip.`;}
+}
+
+// ── LINKS ──
+function setLinks(mode,hn,an){
+  const q=encodeURIComponent(hn+' '+an);
+  const gs=encodeURIComponent(hn+' vs '+an+' stats goals');
+  document.getElementById(mode+'-lk-flash').href=`https://www.flashscore.com/search/#${encodeURIComponent(hn)}`;
+  document.getElementById(mode+'-lk-sofa').href=`https://www.sofascore.com/search#${q}`;
+  document.getElementById(mode+'-lk-odds').href=`https://www.oddschecker.com/football/search?q=${q}`;
+  document.getElementById(mode+'-lk-port').href=`https://www.oddsportal.com/search/results/?q=${q}`;
+  document.getElementById(mode+'-lk-google').href=`https://www.google.com/search?q=${gs}`;
+}
+
+// ── SAVE PICKS ──
+function saveOUPick(){
+  const hn=document.getElementById('ou-h-name').value||'Home';
+  const an=document.getElementById('ou-a-name').value||'Away';
+  const sig=document.getElementById('ou-v-title').textContent;
+  if(sig==='—'){alert('Run analysis first!');return;}
+  const mkt=sig.includes('OVER')||sig.includes('Over')?'over':'under';
+  const notes=document.getElementById('ou-notes').value.trim();
+  const details={
+    type:'Over/Under',
+    homeScored:document.getElementById('ou-h-scored').value||'—',
+    homeConceded:document.getElementById('ou-h-conceded').value||'—',
+    awayScored:document.getElementById('ou-a-scored').value||'—',
+    awayConceded:document.getElementById('ou-a-conceded').value||'—',
+    conf:document.getElementById('ou-conf-pct').textContent,
+    probs:document.getElementById('ou-probs').innerText.replace(/\n/g,' · '),
+    h2h:chips['ou-h2h'],rest:chips['ou-rest'],
+    weather:chips['ou-weather'],ref:chips['ou-ref'],
+    combo:document.getElementById('ou-combo-body').innerText||'',
+    upset:document.getElementById('ou-upset-body').innerText||''
+  };
+  addPick(hn,an,mkt,sig,notes,details);
+}
+
+function saveGGPick(){
+  const hn=document.getElementById('gg-h-name').value||'Home';
+  const an=document.getElementById('gg-a-name').value||'Away';
+  const sig=document.getElementById('gg-v-title').textContent;
+  if(sig==='—'){alert('Run analysis first!');return;}
+  const mkt=sig.includes('GG')||sig.includes('BOTH')?'gg':'ng';
+  const notes=document.getElementById('gg-notes').value.trim();
+  const details={
+    type:'GG / NG',
+    homeScoredIn:document.getElementById('gg-h-sc').value||'—',
+    homeCS:document.getElementById('gg-h-cs').value||'—',
+    awayScoredIn:document.getElementById('gg-a-sc').value||'—',
+    awayCS:document.getElementById('gg-a-cs').value||'—',
+    conf:document.getElementById('gg-conf-pct').textContent,
+    probs:document.getElementById('gg-probs').innerText.replace(/\n/g,' · '),
+    h2h:chips['gg-h2h'],rest:chips['gg-rest'],
+    weather:chips['gg-weather'],ref:chips['gg-ref'],
+    combo:document.getElementById('gg-combo-body').innerText||'',
+    upset:document.getElementById('gg-upset-body').innerText||''
+  };
+  addPick(hn,an,mkt,sig,notes,details);
+}
+
+function addPick(hn,an,mkt,sig,notes='',details={}){
+  picks.unshift({
+    id:Date.now(),
+    match:hn+' vs '+an,
+    home:hn,away:an,
+    mkt,sig,notes,details,
+    date:new Date().toLocaleDateString(),
+    time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}),
+    result:'pending'
+  });
+  localStorage.setItem('gs2_picks',JSON.stringify(picks));
+  renderTracker();
+  alert('✅ Pick saved!');
+}
+
+// ── TRACKER ──
+function renderTracker(){
+  const w=picks.filter(p=>p.result==='win').length;
+  const l=picks.filter(p=>p.result==='loss').length;
+  const pend=picks.filter(p=>p.result==='pending').length;
+  const rate=w+l>0?Math.round((w/(w+l))*100)+'%':'—';
+
+  document.getElementById('t-tot').textContent=picks.length;
+  document.getElementById('t-win').textContent=w;
+  document.getElementById('t-loss').textContent=l;
+  document.getElementById('t-rate').textContent=rate;
+
+  // Filter buttons
+  const filter=document.getElementById('t-filter')?.value||'all';
+  let shown=picks;
+  if(filter==='pending') shown=picks.filter(p=>p.result==='pending');
+  if(filter==='won') shown=picks.filter(p=>p.result==='win');
+  if(filter==='lost') shown=picks.filter(p=>p.result==='loss');
+
+  const list=document.getElementById('picks-list');
+  if(!picks.length){
+    list.innerHTML='<div class="empty">No picks yet.<br>Analyse a match and tap Save Pick.</div>';
+    return;
+  }
+  if(!shown.length){
+    list.innerHTML='<div class="empty">No picks in this filter.</div>';
+    return;
+  }
+
+  list.innerHTML=shown.map(pk=>`
+    <div class="pick ${expandedPick===pk.id?'pick-expanded':''}">
+      <div class="pick-info" onclick="toggleExpand(${pk.id})">
+        <div class="pick-match">${pk.match}</div>
+        <div class="pick-meta">
+          ${pk.date} ${pk.time||''} ·
+          <span class="pick-mkt pm-${pk.mkt}">${pk.mkt.toUpperCase()}</span> ·
+          <span style="color:var(--muted);font-size:.6rem">${pk.sig}</span>
+        </div>
+      </div>
+      <div class="pick-dots">
+        <span class="status ${pk.result==='pending'?'st-p':pk.result==='win'?'st-w':'st-l'}">
+          ${pk.result==='pending'?'⏳':pk.result==='win'?'✅':'❌'}
+        </span>
+        ${pk.result==='pending'?`
+          <div class="dot dot-g" title="Mark Won" onclick="markPick(${pk.id},'win')"></div>
+          <div class="dot dot-r" title="Mark Lost" onclick="markPick(${pk.id},'loss')"></div>
+        `:''}
+        <div class="dot dot-x" onclick="delPick(${pk.id})">✕</div>
+      </div>
+
+      ${expandedPick===pk.id?`
+      <div class="pick-detail">
+        <div class="pd-section">
+          <div class="pd-title">📊 Analysis Type</div>
+          <div class="pd-val">${pk.details?.type||pk.mkt.toUpperCase()}</div>
+        </div>
+        ${pk.details?.homeScored?`
+        <div class="pd-section">
+          <div class="pd-title">⚽ Team Stats</div>
+          <div class="pd-val">${pk.home}: ${pk.details.homeScored} scored / ${pk.details.homeConceded} conceded</div>
+          <div class="pd-val">${pk.away}: ${pk.details.awayScored} scored / ${pk.details.awayConceded} conceded</div>
+        </div>`:''}
+        ${pk.details?.homeScoredIn?`
+        <div class="pd-section">
+          <div class="pd-title">🎯 Scoring Stats (last 10)</div>
+          <div class="pd-val">${pk.home}: scored in ${pk.details.homeScoredIn}/10 · CS: ${pk.details.homeCS}</div>
+          <div class="pd-val">${pk.away}: scored in ${pk.details.awayScoredIn}/10 · CS: ${pk.details.awayCS}</div>
+        </div>`:''}
+        <div class="pd-section">
+          <div class="pd-title">📈 Model Confidence</div>
+          <div class="pd-val">${pk.details?.conf||'—'} · ${pk.details?.probs||''}</div>
+        </div>
+        <div class="pd-section">
+          <div class="pd-title">⚡ Factors Used</div>
+          <div class="pd-val">H2H: ${pk.details?.h2h||'—'} · Rest: ${pk.details?.rest||'—'} · Weather: ${pk.details?.weather||'—'} · Ref: ${pk.details?.ref||'—'}</div>
+        </div>
+        ${pk.details?.combo?`<div class="pd-section"><div class="pd-title">🔥 Combo Signal</div><div class="pd-val">${pk.details.combo}</div></div>`:''}
+        ${pk.details?.upset?`<div class="pd-section"><div class="pd-title">⚠️ Upset Alert</div><div class="pd-val">${pk.details.upset}</div></div>`:''}
+        ${pk.notes?`<div class="pd-section"><div class="pd-title">🧠 Mental Notes</div><div class="pd-val" style="font-style:italic">${pk.notes}</div></div>`:''}
+        ${pk.result!=='pending'?`<div class="pd-section"><div class="pd-title">Final Result</div><div class="pd-val" style="font-weight:700;color:${pk.result==='win'?'var(--green)':'var(--red)'}">${pk.result==='win'?'✅ WON':'❌ LOST'}</div></div>`:''}
+      </div>
+      `:''}
+    </div>`).join('');
+}
+
+function toggleExpand(id){
+  expandedPick=expandedPick===id?null:id;
+  renderTracker();
+}
+
+function markPick(id,r){
+  picks=picks.map(pk=>pk.id===id?{...pk,result:r}:pk);
+  localStorage.setItem('gs2_picks',JSON.stringify(picks));
+  renderTracker();
+}
+function delPick(id){
+  if(!confirm('Delete this pick?'))return;
+  picks=picks.filter(pk=>pk.id!==id);
+  localStorage.setItem('gs2_picks',JSON.stringify(picks));
+  renderTracker();
+}
+function clearPicks(){
+  if(!confirm('Clear ALL picks? This cannot be undone.'))return;
+  picks=[];
+  localStorage.removeItem('gs2_picks');
+  renderTracker();
+}
+
+function resetOU(){document.getElementById('ou-result').style.display='none';window.scrollTo({top:0,behavior:'smooth'});}
+function resetGG(){document.getElementById('gg-result').style.display='none';window.scrollTo({top:0,behavior:'smooth'});}
+function p(v){return Math.round(v*100)+'%';}
+</script>
+</body>
+</html>
