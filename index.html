@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>GoalScope</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600&display=swap" rel="stylesheet">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7005666776417136" crossorigin="anonymous"></script>
 <style>
 :root{
   --bg:#0f172a; --card:#1e293b; --border:#334155;
@@ -407,20 +408,10 @@ body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min
     <div id="ou-h-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
     <div id="ou-h-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
 
-    <div class="dvd">overall avg goals per game (last 10)</div>
+    <div class="dvd">avg goals per game</div>
     <div class="two-col">
       <div class="input-group"><div class="input-lbl">⚽ Scored</div><input class="num-input" id="ou-h-scored" type="number" step="0.1" min="0" placeholder="1.8"/></div>
       <div class="input-group"><div class="input-lbl">🛡️ Conceded</div><input class="num-input" id="ou-h-conceded" type="number" step="0.1" min="0" placeholder="1.1"/></div>
-    </div>
-    <div class="dvd">🏠 at home only (last 5 home games)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored @ Home</div><input class="num-input" id="ou-h-home-sc" type="number" step="0.1" min="0" placeholder="2.1"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ Conceded @ Home</div><input class="num-input" id="ou-h-home-co" type="number" step="0.1" min="0" placeholder="0.8"/></div>
-    </div>
-    <div class="dvd">🔥 last 3 games only (most recent)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored L3</div><input class="num-input" id="ou-h-l3-sc" type="number" step="0.1" min="0" placeholder="2.0"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ Conceded L3</div><input class="num-input" id="ou-h-l3-co" type="number" step="0.1" min="0" placeholder="0.7"/></div>
     </div>
     <div class="dvd">last 5 results — tap to toggle</div>
     <div class="form-row" id="ou-h-form"></div>
@@ -442,20 +433,10 @@ body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min
     <div id="ou-a-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
     <div id="ou-a-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
 
-    <div class="dvd">overall avg goals per game (last 10)</div>
+    <div class="dvd">avg goals per game</div>
     <div class="two-col">
       <div class="input-group"><div class="input-lbl">⚽ Scored</div><input class="num-input" id="ou-a-scored" type="number" step="0.1" min="0" placeholder="1.3"/></div>
       <div class="input-group"><div class="input-lbl">🛡️ Conceded</div><input class="num-input" id="ou-a-conceded" type="number" step="0.1" min="0" placeholder="1.5"/></div>
-    </div>
-    <div class="dvd">✈️ away only (last 5 away games)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored Away</div><input class="num-input" id="ou-a-away-sc" type="number" step="0.1" min="0" placeholder="1.0"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ Conceded Away</div><input class="num-input" id="ou-a-away-co" type="number" step="0.1" min="0" placeholder="1.8"/></div>
-    </div>
-    <div class="dvd">🔥 last 3 games only (most recent)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored L3</div><input class="num-input" id="ou-a-l3-sc" type="number" step="0.1" min="0" placeholder="1.0"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ Conceded L3</div><input class="num-input" id="ou-a-l3-co" type="number" step="0.1" min="0" placeholder="2.0"/></div>
     </div>
     <div class="dvd">last 5 results — tap to toggle</div>
     <div class="form-row" id="ou-a-form"></div>
@@ -602,20 +583,10 @@ body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min
     <div id="gg-h-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
     <div id="gg-h-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
 
-    <div class="dvd">last 10 games — overall</div>
+    <div class="dvd">last 10 games stats</div>
     <div class="two-col">
       <div class="input-group"><div class="input-lbl">⚽ Games Scored</div><input class="num-input" id="gg-h-sc" type="number" min="0" max="10" placeholder="7"/></div>
       <div class="input-group"><div class="input-lbl">🛡️ Clean Sheets</div><input class="num-input" id="gg-h-cs" type="number" min="0" max="10" placeholder="3"/></div>
-    </div>
-    <div class="dvd">🏠 at home only (last 5 home games)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored @ Home</div><input class="num-input" id="gg-h-home-sc" type="number" min="0" max="5" placeholder="4"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ CS @ Home</div><input class="num-input" id="gg-h-home-cs" type="number" min="0" max="5" placeholder="2"/></div>
-    </div>
-    <div class="dvd">🔥 last 3 games only</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored L3</div><input class="num-input" id="gg-h-l3-sc" type="number" min="0" max="3" placeholder="3"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ CS L3</div><input class="num-input" id="gg-h-l3-cs" type="number" min="0" max="3" placeholder="1"/></div>
     </div>
     <div class="dvd">last 5 results</div>
     <div class="form-row" id="gg-h-form"></div>
@@ -636,20 +607,10 @@ body{font-family:'Archivo',sans-serif;background:var(--bg);color:var(--text);min
     <div id="gg-a-load" class="loading" style="display:none"><span class="spinner"></span>Loading stats...</div>
     <div id="gg-a-auto" style="display:none"><span class="auto-tag">✅ Stats auto-filled</span></div>
 
-    <div class="dvd">last 10 games — overall</div>
+    <div class="dvd">last 10 games stats</div>
     <div class="two-col">
       <div class="input-group"><div class="input-lbl">⚽ Games Scored</div><input class="num-input" id="gg-a-sc" type="number" min="0" max="10" placeholder="6"/></div>
       <div class="input-group"><div class="input-lbl">🛡️ Clean Sheets</div><input class="num-input" id="gg-a-cs" type="number" min="0" max="10" placeholder="4"/></div>
-    </div>
-    <div class="dvd">✈️ away only (last 5 away games)</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored Away</div><input class="num-input" id="gg-a-away-sc" type="number" min="0" max="5" placeholder="3"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ CS Away</div><input class="num-input" id="gg-a-away-cs" type="number" min="0" max="5" placeholder="2"/></div>
-    </div>
-    <div class="dvd">🔥 last 3 games only</div>
-    <div class="two-col">
-      <div class="input-group"><div class="input-lbl">⚽ Scored L3</div><input class="num-input" id="gg-a-l3-sc" type="number" min="0" max="3" placeholder="2"/></div>
-      <div class="input-group"><div class="input-lbl">🛡️ CS L3</div><input class="num-input" id="gg-a-l3-cs" type="number" min="0" max="3" placeholder="1"/></div>
     </div>
     <div class="dvd">last 5 results</div>
     <div class="form-row" id="gg-a-form"></div>
@@ -879,88 +840,39 @@ async function pickTeam(id,teamId,name){
     const fx=d.response||[];
     if(!fx.length){showErr(id,'No fixtures found — fill manually');return;}
 
-    const side=id.split('-')[1]; // 'h' or 'a'
-    const isHomeTeam=side==='h';
-
-    // All games stats (last 10)
-    let scored=0,conceded=0,gamesScored=0,cs=0,games=0;
-    // Home/Away specific stats
-    let venueScored=0,venueConceded=0,venueScoredIn=0,venueCS=0,venueGames=0;
-    // Last 3 games
-    let l3scored=0,l3conceded=0,l3scoredIn=0,l3cs=0,l3count=0;
-
-    fx.slice(0,10).forEach((f,i)=>{
-      const teamIsHome=f.teams.home.id===teamId;
-      const gs=teamIsHome?f.goals.home:f.goals.away;
-      const gc=teamIsHome?f.goals.away:f.goals.home;
+    let scored=0,conceded=0,gamesScored=0,cs=0;
+    fx.slice(0,10).forEach(f=>{
+      const isH=f.teams.home.id===teamId;
+      const gs=isH?f.goals.home:f.goals.away;
+      const gc=isH?f.goals.away:f.goals.home;
       if(gs===null||gc===null)return;
-
-      // Overall
-      scored+=gs;conceded+=gc;games++;
+      scored+=gs;conceded+=gc;
       if(gs>0)gamesScored++;
       if(gc===0)cs++;
-
-      // Last 3 games
-      if(i<3){
-        l3scored+=gs;l3conceded+=gc;l3count++;
-        if(gs>0)l3scoredIn++;
-        if(gc===0)l3cs++;
-      }
-
-      // Home/Away split — home team uses home games, away team uses away games
-      const matchesVenue=isHomeTeam?teamIsHome:!teamIsHome;
-      if(matchesVenue){
-        venueScored+=gs;venueConceded+=gc;venueGames++;
-        if(gs>0)venueScoredIn++;
-        if(gc===0)venueCS++;
-      }
     });
-
-    const g=Math.max(games,1);
-    const vg=Math.max(venueGames,1);
-    const l3g=Math.max(l3count,1);
+    const g=Math.min(fx.length,10);
     const avgSc=(scored/g).toFixed(2);
     const avgCo=(conceded/g).toFixed(2);
-    const venueSc=(venueScored/vg).toFixed(2);
-    const venueCo=(venueConceded/vg).toFixed(2);
-    const l3Sc=(l3scored/l3g).toFixed(2);
-    const l3Co=(l3conceded/l3g).toFixed(2);
 
     // Fill OU inputs
-    const pfx='ou-'+side;
-    if(document.getElementById(pfx+'-scored')) document.getElementById(pfx+'-scored').value=avgSc;
-    if(document.getElementById(pfx+'-conceded')) document.getElementById(pfx+'-conceded').value=avgCo;
-    if(isHomeTeam){
-      if(document.getElementById(pfx+'-home-sc')) document.getElementById(pfx+'-home-sc').value=venueSc;
-      if(document.getElementById(pfx+'-home-co')) document.getElementById(pfx+'-home-co').value=venueCo;
-    }else{
-      if(document.getElementById(pfx+'-away-sc')) document.getElementById(pfx+'-away-sc').value=venueSc;
-      if(document.getElementById(pfx+'-away-co')) document.getElementById(pfx+'-away-co').value=venueCo;
-    }
-    if(document.getElementById(pfx+'-l3-sc')) document.getElementById(pfx+'-l3-sc').value=l3Sc;
-    if(document.getElementById(pfx+'-l3-co')) document.getElementById(pfx+'-l3-co').value=l3Co;
+    const ouSc=document.getElementById('ou-'+id.split('-')[1]+'-scored');
+    const ouCo=document.getElementById('ou-'+id.split('-')[1]+'-conceded');
+    if(ouSc)ouSc.value=avgSc;
+    if(ouCo)ouCo.value=avgCo;
 
     // Fill GG inputs
-    const gpfx='gg-'+side;
-    if(document.getElementById(gpfx+'-sc')) document.getElementById(gpfx+'-sc').value=gamesScored;
-    if(document.getElementById(gpfx+'-cs')) document.getElementById(gpfx+'-cs').value=cs;
-    if(isHomeTeam){
-      if(document.getElementById(gpfx+'-home-sc')) document.getElementById(gpfx+'-home-sc').value=venueScoredIn;
-      if(document.getElementById(gpfx+'-home-cs')) document.getElementById(gpfx+'-home-cs').value=venueCS;
-    }else{
-      if(document.getElementById(gpfx+'-away-sc')) document.getElementById(gpfx+'-away-sc').value=venueScoredIn;
-      if(document.getElementById(gpfx+'-away-cs')) document.getElementById(gpfx+'-away-cs').value=venueCS;
-    }
-    if(document.getElementById(gpfx+'-l3-sc')) document.getElementById(gpfx+'-l3-sc').value=l3scoredIn;
-    if(document.getElementById(gpfx+'-l3-cs')) document.getElementById(gpfx+'-l3-cs').value=l3cs;
+    const ggSc=document.getElementById('gg-'+id.split('-')[1]+'-sc');
+    const ggCs=document.getElementById('gg-'+id.split('-')[1]+'-cs');
+    if(ggSc)ggSc.value=gamesScored;
+    if(ggCs)ggCs.value=cs;
 
-    // Fill form buttons
-    ['ou-'+side,'gg-'+side].forEach(fid=>{
+    // Fill form buttons (both tabs)
+    ['ou-'+id.split('-')[1],'gg-'+id.split('-')[1]].forEach(fid=>{
       const btns=document.querySelectorAll('#'+fid+'-form .fb');
       fx.slice(0,5).forEach((f,i)=>{
-        const teamIsHome=f.teams.home.id===teamId;
-        const gs=teamIsHome?f.goals.home:f.goals.away;
-        const gc=teamIsHome?f.goals.away:f.goals.home;
+        const isH=f.teams.home.id===teamId;
+        const gs=isH?f.goals.home:f.goals.away;
+        const gc=isH?f.goals.away:f.goals.home;
         if(gs===null||gc===null||!btns[i])return;
         const res=gs===gc?'D':gs>gc?'W':'L';
         btns[i].dataset.v=res;btns[i].textContent=res;btns[i].className='fb '+res;
@@ -982,36 +894,15 @@ function poi(l,k){return(Math.pow(l,k)*Math.exp(-l))/fact(k);}
 
 // ── OVER / UNDER ──
 function calcOU(){
-  // Base stats
   const hSc=parseFloat(document.getElementById('ou-h-scored').value)||0;
   const hCo=parseFloat(document.getElementById('ou-h-conceded').value)||0;
   const aSc=parseFloat(document.getElementById('ou-a-scored').value)||0;
   const aCo=parseFloat(document.getElementById('ou-a-conceded').value)||0;
   if(!hSc||!aSc){alert('Enter goals scored for both teams first!');return;}
 
-  // Home/Away specific stats (venue split)
-  const hHomeSc=parseFloat(document.getElementById('ou-h-home-sc').value)||hSc;
-  const hHomeCo=parseFloat(document.getElementById('ou-h-home-co').value)||hCo;
-  const aAwaySc=parseFloat(document.getElementById('ou-a-away-sc').value)||aSc;
-  const aAwayCo=parseFloat(document.getElementById('ou-a-away-co').value)||aCo;
-
-  // Last 3 games (most recent — weighted 2x)
-  const hL3Sc=parseFloat(document.getElementById('ou-h-l3-sc').value)||hSc;
-  const hL3Co=parseFloat(document.getElementById('ou-h-l3-co').value)||hCo;
-  const aL3Sc=parseFloat(document.getElementById('ou-a-l3-sc').value)||aSc;
-  const aL3Co=parseFloat(document.getElementById('ou-a-l3-co').value)||aCo;
-
-  // ── WEIGHTED FORMULA ──
-  // Overall: weight 1 | Venue split: weight 2 | Last 3: weight 3
-  // This means recent form counts 3x more than season average
-  const hScW=(hSc*1 + hHomeSc*2 + hL3Sc*3)/6;
-  const hCoW=(hCo*1 + hHomeCo*2 + hL3Co*3)/6;
-  const aScW=(aSc*1 + aAwaySc*2 + aL3Sc*3)/6;
-  const aCoW=(aCo*1 + aAwayCo*2 + aL3Co*3)/6;
-
   const leagueAvg=2.65;
-  let hxg=Math.max(0.1,(hScW*aCoW)/leagueAvg);
-  let axg=Math.max(0.1,(aScW*hCoW)/leagueAvg);
+  let hxg=Math.max(0.1,(hSc*hCo)/leagueAvg);
+  let axg=Math.max(0.1,(aSc*aCo)/leagueAvg);
 
   // Smart factor adjustments
   if(chips['ou-h2h']==='high'){hxg*=1.12;axg*=1.12;}
@@ -1066,14 +957,10 @@ function calcOU(){
 
   // Tips
   const tips=[];
-  if(hxg+axg>3.2)tips.push('Weighted xG: '+((hxg+axg).toFixed(2))+' — strong over 2.5 signal');
-  if(hxg+axg<2.0)tips.push('Weighted xG: '+((hxg+axg).toFixed(2))+' — under 2.5 backed');
-  if(hL3Sc>hSc)tips.push('Home scoring more in last 3 than season avg — form is rising 📈');
-  if(aL3Sc<aSc)tips.push('Away scoring less in last 3 than season avg — form is dropping 📉');
-  if(hHomeSc>hSc*1.2)tips.push('Home team scores significantly more at home than average');
-  if(aAwaySc<aSc*0.8)tips.push('Away team scores significantly less on the road');
+  if(hxg+axg>3.2)tips.push('Total xG is '+((hxg+axg).toFixed(2))+' — strong over 2.5 case');
+  if(hxg+axg<2.0)tips.push('Total xG is only '+((hxg+axg).toFixed(2))+' — under 2.5 likely');
   if(o15>0.82)tips.push('Over 1.5 at '+p(o15)+' — almost certain to have 2+ goals');
-  if(u25>0.60&&o15>0.75)tips.push('1-0, 0-1 or 1-1 are the most likely score lines');
+  if(u25>0.60&&o15>0.75)tips.push('1-0, 0-1 or 1-1 are the most likely scores');
   document.getElementById('ou-tips').innerHTML=`<h3>💡 Notes</h3>${tips.length?tips.map(t=>`<div class="tip">${t}</div>`).join(''):'<div class="tip">Stats look balanced — check live odds for value</div>'}`;
 
   // Combo suggester
@@ -1106,43 +993,20 @@ function calcOU(){
 
 // ── GG / NG ──
 function calcGG(){
-  // Base stats (last 10)
   const hSc=parseInt(document.getElementById('gg-h-sc').value)||0;
   const hCs=parseInt(document.getElementById('gg-h-cs').value)||0;
   const aSc=parseInt(document.getElementById('gg-a-sc').value)||0;
   const aCs=parseInt(document.getElementById('gg-a-cs').value)||0;
   if(!hSc&&!aSc){alert('Enter scoring stats for both teams first!');return;}
 
-  // Home/Away split (last 5 venue games, out of 5)
-  const hHomeSc=parseInt(document.getElementById('gg-h-home-sc').value)||Math.round(hSc/2);
-  const hHomeCs=parseInt(document.getElementById('gg-h-home-cs').value)||Math.round(hCs/2);
-  const aAwaySc=parseInt(document.getElementById('gg-a-away-sc').value)||Math.round(aSc/2);
-  const aAwayCs=parseInt(document.getElementById('gg-a-away-cs').value)||Math.round(aCs/2);
+  const hScP=hSc/10;
+  const aScP=aSc/10;
+  const hCsP=hCs/10;
+  const aCsP=aCs/10;
 
-  // Last 3 games (out of 3)
-  const hL3Sc=parseInt(document.getElementById('gg-h-l3-sc').value)||Math.round(hSc*3/10);
-  const hL3Cs=parseInt(document.getElementById('gg-h-l3-cs').value)||Math.round(hCs*3/10);
-  const aL3Sc=parseInt(document.getElementById('gg-a-l3-sc').value)||Math.round(aSc*3/10);
-  const aL3Cs=parseInt(document.getElementById('gg-a-l3-cs').value)||Math.round(aCs*3/10);
-
-  // Convert to probabilities
-  const hScP10=hSc/10, hCsP10=hCs/10;
-  const aScP10=aSc/10, aCsP10=aCs/10;
-  const hScP5=hHomeSc/5, hCsP5=hHomeCs/5;
-  const aScP5=aAwaySc/5, aCsP5=aAwayCs/5;
-  const hScP3=hL3Sc/3, hCsP3=hL3Cs/3;
-  const aScP3=aL3Sc/3, aCsP3=aL3Cs/3;
-
-  // ── WEIGHTED SCORING PROBABILITY ──
-  // Last 3 counts 3x, venue split counts 2x, overall counts 1x
-  const hScW=(hScP10*1 + hScP5*2 + hScP3*3)/6;
-  const hCsW=(hCsP10*1 + hCsP5*2 + hCsP3*3)/6;
-  const aScW=(aScP10*1 + aScP5*2 + aScP3*3)/6;
-  const aCsW=(aCsP10*1 + aCsP5*2 + aScP3*3)/6;
-
-  // P(home scores) vs this away team
-  let pHS=Math.min(0.97,hScW*(1-aCsW*0.5));
-  let pAS=Math.min(0.97,aScW*(1-hCsW*0.5));
+  // P(home scores) adjusted by away clean sheet rate
+  let pHS=Math.min(0.97,hScP*(1-aCsP*0.5));
+  let pAS=Math.min(0.97,aScP*(1-hCsP*0.5));
 
   // Smart factor adjustments
   if(chips['gg-h2h']==='gg'){pHS=Math.min(0.97,pHS*1.1);pAS=Math.min(0.97,pAS*1.1);}
