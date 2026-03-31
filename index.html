@@ -1184,10 +1184,10 @@ function calcGG(){
 
   // Tips
   const tips=[];
-  if(hScP>=0.8&&aScP>=0.8)tips.push('Both teams score in 80%+ of games — strong GG');
+  if(hScW>=0.8&&aScW>=0.8)tips.push('Both teams score in 80%+ of games — strong GG');
   if(hCs>=5)tips.push('Home team has '+hCs+' clean sheets — away may not score');
   if(aCs>=5)tips.push('Away team has '+aCs+' clean sheets — home may not score');
-  if(hScP>=0.8&&aCs<=2)tips.push('Home likely to score, away rarely keeps clean sheets');
+  if(hScW>=0.8&&aCs<=2)tips.push('Home likely to score, away rarely keeps clean sheets');
   document.getElementById('gg-tips').innerHTML=`<h3>💡 Notes</h3>${tips.length?tips.map(t=>`<div class="tip">${t}</div>`).join(''):'<div class="tip">Check H2H history on Flashscore for extra confidence</div>'}`;
 
   // Combo suggester
